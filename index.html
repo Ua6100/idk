@@ -1,13 +1,217 @@
-<html>
-	<body>
-		<title>
-		Plushie.co
-		</title>
-		
-		<h1>
-			Plushies
-		</h1>
-		
-		<a href="https://plushico.com/">Plushie Co</a>
-	</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoltRide Parts</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#0f172a;
+color:white;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px;
+background:#020617;
+}
+
+nav a{
+margin:0 10px;
+color:white;
+text-decoration:none;
+}
+
+.hero{
+text-align:center;
+padding:60px;
+background:linear-gradient(#020617,#0f172a);
+}
+
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+padding:40px;
+}
+
+.product{
+background:#020617;
+padding:20px;
+border-radius:10px;
+text-align:center;
+}
+
+.product img{
+width:100%;
+border-radius:8px;
+}
+
+button{
+background:#22c55e;
+border:none;
+padding:10px 20px;
+margin-top:10px;
+cursor:pointer;
+border-radius:5px;
+font-weight:bold;
+}
+
+.cart{
+position:fixed;
+top:0;
+right:0;
+width:300px;
+height:100%;
+background:#020617;
+padding:20px;
+overflow:auto;
+}
+
+.admin{
+background:#020617;
+padding:40px;
+margin:40px;
+border-radius:10px;
+}
+
+input{
+padding:10px;
+margin:5px;
+width:200px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>VoltRide Parts</h1>
+<nav>
+<a href="#">Home</a>
+<a href="#shop">Shop</a>
+<a href="#admin">Admin</a>
+</nav>
+</header>
+
+<section class="hero">
+<h2>E-Bike & Electric Dirt Bike Parts</h2>
+<p>Motors • Controllers • Batteries • Upgrades</p>
+</section>
+
+<section id="shop" class="products"></section>
+
+<div class="cart">
+<h2>Cart</h2>
+<div id="cartItems"></div>
+<h3 id="total">$0</h3>
+<button onclick="checkout()">Checkout</button>
+</div>
+
+<section id="admin" class="admin">
+<h2>Admin Panel</h2>
+
+<input id="name" placeholder="Product name">
+<input id="price" placeholder="Price">
+<input id="image" placeholder="Image URL">
+<input id="stock" placeholder="Stock">
+
+<br>
+
+<button onclick="addProduct()">Add Product</button>
+
+</section>
+
+<script>
+
+let products = [
+{ name:"72V Motor", price:299, image:"https://via.placeholder.com/300", stock:5 },
+{ name:"72V Battery Pack", price:599, image:"https://via.placeholder.com/300", stock:3 },
+{ name:"Performance Controller", price:129, image:"https://via.placeholder.com/300", stock:10 },
+{ name:"Throttle Kit", price:39, image:"https://via.placeholder.com/300", stock:20 }
+];
+
+let cart = [];
+
+function renderProducts(){
+const container=document.getElementById("shop");
+container.innerHTML="";
+
+products.forEach((p,i)=>{
+
+container.innerHTML+=`
+<div class="product">
+<img src="${p.image}">
+<h3>${p.name}</h3>
+<p>$${p.price}</p>
+<p>Stock: ${p.stock}</p>
+<button onclick="addToCart(${i})">Add to Cart</button>
+</div>
+`;
+
+});
+}
+
+function addToCart(i){
+
+if(products[i].stock<=0){
+alert("Out of stock");
+return;
+}
+
+cart.push(products[i]);
+products[i].stock--;
+
+renderProducts();
+renderCart();
+
+}
+
+function renderCart(){
+
+const cartDiv=document.getElementById("cartItems");
+cartDiv.innerHTML="";
+
+let total=0;
+
+cart.forEach(item=>{
+cartDiv.innerHTML+=`<p>${item.name} - $${item.price}</p>`;
+total+=item.price;
+});
+
+document.getElementById("total").innerText="$"+total;
+
+}
+
+function checkout(){
+
+alert("Checkout coming soon. Connect Stripe or PayPal.");
+
+}
+
+function addProduct(){
+
+const name=document.getElementById("name").value;
+const price=parseFloat(document.getElementById("price").value);
+const image=document.getElementById("image").value;
+const stock=parseInt(document.getElementById("stock").value);
+
+products.push({name,price,image,stock});
+
+renderProducts();
+
+}
+
+renderProducts();
+
+</script>
+
+</body>
 </html>
